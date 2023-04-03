@@ -4,25 +4,31 @@
 # Distribute requests using a roundrobin algorithm
 # Make sure that HAProxy can be managed via an init script
 # Install and configure HAproxy on my lb-01 server.
-sudo apt-get -y update
-apt-get -y install haproxy
 
-# edit config file
-server_config=\
-"
-frontend  mahmoudshee-frontend
-        bind *:80
-        mode http
-        default_backend yonas-backend
-backend mahmoudshee-backend
-        balance roundrobin
-        server 129817-web-01 54.145.241.6:80 check
-        server 129817-web-02 54.89.28.60:80 check
-"
-echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
+# Set student ID
+STUDENT_ID=129817
 
-# enable haproxy to be started by init script
+# Update package lists
+sudo apt-get update
 
-echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+# Install HAProxy
+sudo apt-get install -y haproxy
 
-sudo service haproxy restart
+# Configure HAProxy to send traffic to web-01 and web-02 servers
+sudo bash -c "cat >/etc/haproxy/haproxy.cfg <<EOF
+frontend http-in
+    bind *:80
+    default_backend servers
+
+backend servers
+    balance roundrobin
+    server ${STUDENT_ID}-web-01 ${STUDENT_ID}-web-01:80 check
+    server ${STUDENT_ID}-web-02 ${STUDENT_ID}-web-02:80 check
+EOF"
+
+# Make sure that HAProxy can be managed via an init script
+sudo systemctl enable haproxy
+
+# Restart HAProxy service
+sudo systemctl restart haproxy
+
