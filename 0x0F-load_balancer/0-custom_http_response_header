@@ -2,7 +2,8 @@
 # Configure Nginx so that its HTTP response contains a custom header (on web-01 and web-02)
 # The name of the custom HTTP header must be X-Served-By
 # The value of the custom HTTP header must be the hostname of the server Nginx is running on
-#!/usr/bin/env bash
+
+# This script configures Nginx to include a custom HTTP header with the server hostname
 
 # Update and install Nginx
 sudo apt-get update
@@ -11,23 +12,11 @@ sudo apt-get -y install nginx
 # Allow traffic through port 80 in the firewall
 sudo ufw allow 'Nginx HTTP'
 
-# Create the index page
-echo 'Hello World!' | sudo tee /var/www/html/index.html
-
-# Create the custom 404 page
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-
 # Get the hostname of the server and add it to the custom HTTP header
 hostname=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
 header_string="add_header X-Served-By $hostname;"
 sudo sed -i "/server_name _;/a $header_string" /etc/nginx/sites-available/default
 
-# Configure the redirect for the single page
-sudo sed -i '29i\\trewrite /redirect_me https://www.blog.ehoneahobed.com/ permanent;' /etc/nginx/sites-available/default
-
-# Configure the 404 error page
-sudo sed -i '/listen 80 default_server;/a \\\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\tinternal;\n\t\troot \/var\/www\/html;\n\t}' /etc/nginx/sites-available/default
-
 # Restart Nginx to apply the changes
-sudo service nginx restart
+sudo systemctl restart nginx
 
