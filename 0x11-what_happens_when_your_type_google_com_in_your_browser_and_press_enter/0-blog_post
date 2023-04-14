@@ -1,0 +1,24 @@
+when you type https://www.google.com in your browser and press enter, a series of processes occur behind the scenes to load the web page. These processes include DNS request, TCP/IP, firewall, HTTPS/SSL, load-balancer, web server, application server, and database. the whole process goes like step by step where as 
+    DNS request:
+    The first thing that happens is that your browser sends a DNS request to a DNS server to translate the domain name www.google.com into an IP address that the computer can use to connect to the server. The DNS server responds with the IP address of the Google server, allowing your computer to connect to it.
+
+    TCP/IP:
+    Once your computer has the IP address of the Google server, it establishes a TCP/IP connection to the server. TCP (Transmission Control Protocol) ensures that the data is transmitted reliably and efficiently, while IP (Internet Protocol) ensures that the data is sent to the correct address.
+
+    Firewall:
+    Before the data is transmitted to the Google server, it must pass through a firewall. The firewall is a security system that monitors and controls incoming and outgoing network traffic based on predetermined security rules. The firewall checks the data packets to ensure that they are safe and not a threat to the network.
+
+    HTTPS/SSL:
+    Once the data passes through the firewall, it is encrypted using HTTPS/SSL (HyperText Transfer Protocol Secure/Secure Sockets Layer) to ensure that it cannot be intercepted or tampered with by unauthorized parties. HTTPS/SSL uses a combination of public and private keys to encrypt the data, making it extremely difficult to decipher.
+
+    Load-balancer:
+    The encrypted data is then passed to a load-balancer. The load-balancer is a device or software that distributes incoming network traffic across multiple servers to improve performance and availability. The load-balancer checks the availability of each server and selects the one with the least traffic to handle the request.
+
+    Web server:
+    The selected server receives the encrypted data and decrypts it using the private key. The decrypted data is then processed by a web server. The web server is a server that hosts and serves web pages to users over the internet. The web server retrieves the HTML, CSS, and JavaScript files that make up the Google homepage and sends them back to the browser.
+
+    Application server:
+    If the Google homepage contains any dynamic content, such as search results or personalized recommendations, the request is passed to an application server. The application server is a server that hosts and runs web applications. The application server retrieves the data from a database and processes it before sending it back to the web server.
+
+    Database:
+    The application server retrieves data from a database. The database is a system for storing and managing data used by web applications. The database stores all the information required to generate the Google homepage, such as search results, news articles, and weather information.
