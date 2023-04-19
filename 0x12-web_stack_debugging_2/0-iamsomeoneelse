@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Get the username from the first argument
+USERNAME=$1
+
+# Run the `whoami` command as the specified user
+sudo -u $USERNAME whoami
+
