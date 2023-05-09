@@ -1,45 +1,50 @@
 #!/usr/bin/python3
 """
-Recursive function that queries the Reddit API and returns a list containing
-the titles of all hot articles for a given subreddit.
+Module for querying the Reddit API recursively and returning a list of titles of
+all hot articles for a given subreddit.
 """
-
 import requests
 
 
 def recurse(subreddit, hot_list=[], after=None):
     """
-    Recursively retrieves all hot posts for a given subreddit.
+    Recursively queries the Reddit API and returns a list of titles of all hot
+    articles for a given subreddit.
 
-    subreddit: the subreddit to retrieve posts from.
-    hot_list: list to store post titles.
-    after: pagination parameter to continue from the last post retrieved.
+    Args:
+        subreddit (str): The name of the subreddit to search.
+        hot_list (list): The list to append the hot article titles to.
+        after (str): The fullname of the last item in the previous page of
+            results.
 
-    returns: list of post titles, or None if an invalid subreddit was given.
+    Returns:
+        A list of titles of all hot articles for the given subreddit, or None if
+        the subreddit is not found.
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
-    params = {'limit': 100, 'after': after}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    headers = {"User-Agent": "Mozilla/5.0"}
 
+    # Handle pagination with the 'after' parameter
+    params = {"limit": 100}
+    if after:
+        params["after"] = after
+
+    # Send the GET request to the API and check for errors
     response = requests.get(url, headers=headers, params=params)
     if response.status_code != 200:
         return None
 
-    data = response.json().get('data')
-    if not data:
-        return hot_list
+    # Extract the data from the JSON response
+    data = response.json()["data"]
+    children = data["children"]
+    for child in children:
+        title = child["data"]["title"]
+        hot_list.append(title)
 
-    posts = data.get('children')
-    if not posts:
-        return hot_list
+    # Recursively call the function with the 'after' parameter set to the
+    # fullname of the last item in the previous page of results
+    after = data["after"]
+    if after:
+        recurse(subreddit, hot_list, after)
 
-    for post in posts:
-        title = post.get('data', {}).get('title')
-        if title:
-            hot_list.append(title)
-
-    next_page = data.get('after')
-    if not next_page:
-        return hot_list
-
-    return recurse(subreddit, hot_list, next_page)
+    return hot_list
