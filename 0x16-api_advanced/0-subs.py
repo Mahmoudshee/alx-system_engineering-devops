@@ -6,6 +6,7 @@ and returns the number of subscribers for a given subreddit.
 
 import requests
 
+
 def number_of_subscribers(subreddit):
     """
     Returns the number of subscribers for a given subreddit.
@@ -21,4 +22,3 @@ def number_of_subscribers(subreddit):
         return json_data["data"]["subscribers"]
     else:
         return 0
-
