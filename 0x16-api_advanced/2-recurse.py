@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Module for querying the Reddit API recursively and returning a list of titles of
+Module for querying the Reddit API recursively and returning list of titles of
 all hot articles for a given subreddit.
 """
 import requests
@@ -18,7 +18,7 @@ def recurse(subreddit, hot_list=[], after=None):
             results.
 
     Returns:
-        A list of titles of all hot articles for the given subreddit, or None if
+        A list of titles of all hot articles for the given subreddit or None if
         the subreddit is not found.
     """
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
