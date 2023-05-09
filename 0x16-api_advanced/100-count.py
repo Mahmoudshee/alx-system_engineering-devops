@@ -8,17 +8,24 @@ and prints a sorted count of given keywords.
 import requests
 
 
-def count_words(subreddit, word_list, hot_list=[], after=None):
+def count_words(subreddit, word_list, hot_list=None, after=None):
     """
     Recursive function that queries the Reddit API,
     parses the title of all hot articles,
     and prints a sorted count of given keywords.
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                             'AppleWebKit/537.36 (KHTML, like Gecko) '
-                             'Chrome/58.0.3029.110 Safari/537.3'}
+    if hot_list is None:
+        hot_list = []
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/58.0.3029.110 Safari/537.3'
+    }
+
     params = {'limit': 100, 'after': after}
-    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
+
     response = requests.get(url, headers=headers, params=params,
                             allow_redirects=False)
 
@@ -37,8 +44,8 @@ def count_words(subreddit, word_list, hot_list=[], after=None):
 
         for word in words:
             word = word.rstrip('!,.?_')
-            if word in word_list and word not in hot_list:
-                hot_list.append(word)
+            if word.lower() in word_list and word not in hot_list:
+                hot_list.append(word.lower())
 
     next_page = data.get('data', {}).get('after', None)
     if next_page:
@@ -52,4 +59,8 @@ def count_words(subreddit, word_list, hot_list=[], after=None):
         sorted_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
         for item in sorted_count:
             if item[1] != 0:
-                print('{}: {}'.format(item[0], item[1]))
+                print(f'{item[0]}: {item[1]}')
+
+
+if __name__ == '__main__':
+    count_words('python', ['python', 'python3', 'flask', 'django'])
